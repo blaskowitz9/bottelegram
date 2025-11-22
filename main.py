@@ -6,14 +6,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Токен бота
-TOKEN = '8357564192:AAFx05edCIqGPWo0N0SY-I4IcLsxnHVQrkA'
+TOKEN = '8240288411:AAEWHQn56pn6An6xAtN_V_lmzNUUGK7Z0Bk'
 
 # Инициализация бота и диспетчера
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 # ID канала для проверки подписки (замените на реальный)
-CHANNEL_ID = '-11111111111111'  # Пример: '-1001234567890'
+CHANNEL_ID = '-1003022523420'  # Пример: '-1001234567890'
 
 @dp.message_handler(Command('start'))
 async def start_command(message: types.Message):
