@@ -42,7 +42,7 @@ async def check_subscription(message: types.Message):
         )
         
         # Проверяем, что пользователь не покинул канал
-        if user_status.status != 'left':
+        if user_status.status not in ['left', 'kicked']:
             await message.answer('Вы подписаны на канал, можете получать контент!')
             await send_content(message)
         else:
@@ -70,19 +70,48 @@ async def check_subscription(message: types.Message):
 @dp.callback_query(lambda callback: callback.data == 'check_subscription')
 async def check_subscription_callback(callback: types.CallbackQuery):
     """Обработчик нажатия кнопки проверки подписки"""
-    await callback.answer()
-    await check_subscription(callback.message)
+    try:
+        # Получаем статус пользователя в канале
+        user_status = await bot.get_chat_member(
+            chat_id=CHANNEL_ID, 
+            user_id=callback.from_user.id
+        )
+        
+        # Проверяем, что пользователь не покинул канал
+        if user_status.status not in ['left', 'kicked']:
+            await callback.message.answer('Вы подписаны на канал, можете получать контент!')
+            await send_content(callback.message)
+            await callback.answer('✅ Подписка подтверждена!')
+        else:
+            # Создаем кнопку для подписки
+            markup = types.InlineKeyboardMarkup(inline_keyboard=[
+                [types.InlineKeyboardButton(
+                    text='Подписаться на канал', 
+                    url='https://t.me/PlantsvsZombiesFusionLegend'
+                )],
+                [types.InlineKeyboardButton(
+                    text='Проверить подписку', 
+                    callback_data='check_subscription'
+                )]
+            ])
+            
+            await callback.message.answer(
+                'Вы еще не подписаны на канал! Пожалуйста, подпишитесь и нажмите "Проверить подписку" снова.',
+                reply_markup=markup
+            )
+            await callback.answer('❌ Вы не подписаны на канал!')
+    
+    except Exception as e:
+        logging.error(f"Ошибка при проверке подписки: {e}")
+        await callback.message.answer('Произошла ошибка при проверке подписки. Попробуйте позже.')
+        await callback.answer('⚠️ Произошла ошибка!')
 
 async def send_content(message: types.Message):
     """Отправка контента пользователю"""
     # Здесь можно добавить различный контент
     content_messages = [
-        "🎉 Вот ваш контент!",
-        "📚 Полезные материалы:",
-        "1. Первый материал",
-        "2. Второй материал", 
-        "3. Третий материал",
-        "✅ Продолжайте следить за обновлениями!"
+        "🎉 Вот ваш промокод на скин Подсолнуха Нян Кэта - TGSKIN245",
+        "✅ Промокод вводить в Магазине!"
     ]
     
     for msg in content_messages:
