@@ -15,7 +15,7 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 # ID канала для проверки подписки (замените на реальный)
-CHANNEL_ID = '-1003022523420'  # Пример: '-1001234567890'
+CHANNEL_ID = '-1003022523420'
 
 @dp.message(Command('start'))
 async def start_command(message: types.Message):
@@ -71,7 +71,6 @@ async def check_subscription_callback(callback: types.CallbackQuery):
 
 async def send_content(message: types.Message):
     """Отправка контента пользователю"""
-    # Здесь можно добавить различный контент
     content_messages = [
         "🎉 Вот ваш контент!",
         "📚 Полезные материалы:",
